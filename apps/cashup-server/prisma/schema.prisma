@@ -1,0 +1,87 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Transaction {
+  amount          Float?
+  createdAt       DateTime               @default(now())
+  id              String                 @id @default(cuid())
+  payment         Payment?               @relation(fields: [paymentId], references: [id])
+  paymentId       String?
+  status          EnumTransactionStatus?
+  transactionDate DateTime?
+  updatedAt       DateTime               @updatedAt
+}
+
+model Organization {
+  address   String?
+  createdAt DateTime @default(now())
+  email     String?
+  id        String   @id @default(cuid())
+  name      String?
+  phone     String?
+  updatedAt DateTime @updatedAt
+}
+
+model Cashier {
+  createdAt DateTime @default(now())
+  email     String?
+  id        String   @id @default(cuid())
+  name      String?
+  phone     String?
+  updatedAt DateTime @updatedAt
+}
+
+model Payment {
+  amount          Float?
+  createdAt       DateTime           @default(now())
+  id              String             @id @default(cuid())
+  status          EnumPaymentStatus?
+  transactionDate DateTime?
+  transactions    Transaction[]
+  updatedAt       DateTime           @updatedAt
+}
+
+model Merchant {
+  address   String?
+  createdAt DateTime @default(now())
+  email     String?
+  id        String   @id @default(cuid())
+  name      String?
+  phone     String?
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  createdAt   DateTime @default(now())
+  description String?
+  id          String   @id @default(cuid())
+  name        String?
+  price       Float?
+  updatedAt   DateTime @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+enum EnumTransactionStatus {
+  Option1
+}
+
+enum EnumPaymentStatus {
+  Option1
+}
